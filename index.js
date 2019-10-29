@@ -5,17 +5,17 @@ var unzip = require('unzip');
 
 async function main() {
 
-  await downloadObject(
+  await downloadAndUnzipObjectFromS3(
     'YOUR_BUCKET',
-    'YOUR_ZIPPED_OBJECT'
+    'YOUR_ZIPPED_OBJECT',
+    'LOCAL_OUTPUT_FOLDER'
   );
 }
 
-function downloadAndUnzipObjectFromS3(bucket, key) {
+function downloadAndUnzipObjectFromS3(bucket, key, destPath) {
   // Based on guidance from https://github.com/aws/aws-sdk-js/issues/1436#issuecomment-290445593
   // Adapted to include an unzip step
   return new Promise((resolve, reject) => {
-    const destPath = './output';
     const params = { Bucket: bucket, Key: key };
     const s3Stream = s3.getObject(params).createReadStream();
     const writeStream = fstream.Writer(destPath);
